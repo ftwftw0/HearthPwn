@@ -75,9 +75,13 @@ class Deck
     # megic nokiri html parser
     parsed = Nokogiri::HTML(c.body_str)
     # getting each cards name via css selectas
-    card = parsed.css(".t-deck-details-card-list tbody .col-name a")
+    card = parsed.css(".t-deck-details-card-list tbody .col-name")
     for i in 0..card.size-1
-      @cards.push(card[i].text.strip)
+      @cards.push(card[i].at_css("a").text.strip)
+      # looking for the "x 2" in card's name, to add it twice
+      if card[i].text.strip.count('2') > 0
+        @cards.push(card[i].at_css("a").text.strip)
+      end
     end
     # now our cards name are stored in a tab inside the deck
   end

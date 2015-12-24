@@ -35,14 +35,14 @@ def findBestsSuitableDecks(mycards)
                         lastupdated[i].text.strip,
                       "www.hearthpwn.com" + deckname[i]['href'])
       printf "Checking cards for \"%s\" deck. Rating %s \n", deck.name, deck.rating
-      if (haveAllCards(deck.cards, mycards))
+      if ((ret = missCards(deck.cards, mycards)) > 0)
+        printf "You need %i more card(s)...\n", ret
+      else
         decks.push(deck)
         printf "#------ Here's a perfect deck for you ! ------#\n"
         deck.print
         printf "... Press Enter to find another suitable deck ! Ctrl-C to quit. ...\n"
         gets
-      else
-        puts "Not don't have some cards...\n"
       end
 
       # Checking if next page button is present,
@@ -59,13 +59,14 @@ def findBestsSuitableDecks(mycards)
   return decks
 end
 
-def haveAllCards(deckcards, mycards)
+def missCards(deckcards, mycards)
+  missing = 0
   deckcards.each do |deckcard|
     if !cardnameInArray(mycards, deckcard)
-      return false
+      missing += 1
     end
   end
-  return true
+  return missing
 end
 
 def cardnameInArray(cardsTab, cardname)
