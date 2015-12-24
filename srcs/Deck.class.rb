@@ -41,6 +41,23 @@ class Deck
   def cards
     @cards
   end
+
+  def name
+    @name
+  end
+
+  def rating
+    @rating
+  end
+
+  def cost
+    @cost
+  end
+
+  def lastupdated
+    @lastupdated
+  end
+
   
   ############################################################################
   #                             Private Methods                              #
@@ -49,7 +66,6 @@ class Deck
 
   # Function used to fill @_decks table
   def setAllCards()
-    printf "Finding cards for deck \"%s\"\n", @name
     @cards = []
     # cUrl inits
     c = Curl::Easy.new()

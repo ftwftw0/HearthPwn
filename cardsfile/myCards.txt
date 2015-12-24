@@ -1,18 +1,17 @@
-Circle of Healing
-Flash Heal
-Power Word: Shield
-Northshire Cleric
-Museum Curator
-Shadow Word: Death
-Thoughtsteal
-Velen's Chosen
-Auchenai Soulpriest
-Holy Nova
-Entomb
-Lightbomb
-Cabal Shadow Priest
-Zombie Chow
-Wild Pyromancer
-Deathlord
-Injured Blademaster
-Justicar Trueheart
+Earth Shock
+Lightning Bolt
+Rockbiter Weapon
+Tunnel Trogg
+Stormforged Axe
+Ancestral Knowledge
+Crackle
+Lava Shock
+Totem Golem
+Feral Spirit
+Lava Burst
+Unbound Elemental
+Doomhammer
+Abusive Sergeant
+Leper Gnome
+Sir Finley Mrrgglton
+Argent Horserider
