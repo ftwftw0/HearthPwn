@@ -1,0 +1,96 @@
+require 'nokogiri'
+require 'singleton'
+
+##################################################################################
+# This Cards class should be used to contain all hearthstone cards with following#
+#  infos:                                                                        #
+#     id, name, rarity, type, class, cost, attack, and health                    #
+##################################################################################
+class Cards  
+  include Singleton
+
+  #
+  # Inits the Cards instance (should be a singleton).
+  # Cards are all coming from HearthPwn.com
+  #
+  def initialize()
+    # Cards table, containing cards hashes
+    setAllCards()
+  end
+
+  ############################################################################
+  #                             Public Methods                               #
+  ############################################################################
+  public
+  def getIdByName(name)
+    found = nil
+    @_cards.each do |card|
+      if card['name'] == name
+        found = card['id']
+        break
+      end
+    end
+    return found
+  end
+
+  ############################################################################
+  #                             Getters/Setters                              #
+  ############################################################################
+  def cards
+    @_cards
+  end
+  
+  ############################################################################
+  #                             Private Methods                              #
+  ############################################################################
+  private
+
+  # Function used to fill @_cards table
+  def setAllCards()
+    @_cards = []
+    # cUrl inits
+    c = Curl::Easy.new()
+    c.follow_location = true
+
+    # gotta parse every page
+    page = 1
+    nxt = true
+    index = 0
+    while (nxt)
+      c.url = "http://www.hearthpwn.com/cards?display=1&filter-premium=1&page=" + page.to_s
+      c.http_get
+      # megic nokiri html parser
+      parsed = Nokogiri::HTML(c.body_str)
+      # getting each cards infos via css selectas
+      card = parsed.css(".col-name a")
+      type = parsed.css(".col-type")
+      cclass = parsed.css(".col-class")
+      cost = parsed.css(".col-cost")
+      attack = parsed.css(".col-attack")
+      health = parsed.css(".col-health")
+      # storing cards infos as a hash in a tab like this :
+      # {id, name, rarity, type, class, cost, attack, health}
+      for i in 1..card.size-1
+        @_cards.push({'id' => card[i]['data-id'],
+                       'name' => card[i].text,
+                       'rarity' => /rarity-(.)/.match(card[i]['class']).captures[0],
+                       'type' => type[i].text,
+                       'class' => cclass[i].text,
+                       'cost' => cost[i].text,
+                       'attack' => attack[i].text,
+                       'health' => health[i].text})
+      end
+      # Checking if next page button is present,
+      # If not, then that's the last page,
+      # we can leave da loop
+      nxt = false
+      parsed.css(".j-listing-pagination .b-pagination-item a").each do |pagesbtn|
+        if pagesbtn.text == "Next"
+          nxt = true
+        end
+      end
+      page = page + 1 # moving to next page
+    end
+  end
+  
+end
