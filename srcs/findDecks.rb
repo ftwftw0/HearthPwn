@@ -4,18 +4,28 @@ def findBestDecks()
   c = Curl::Easy.new()
   c.follow_location = true
 
-  # gotta parse monthly top decks page                   
+  # gotta parse monthly top decks page 
   c.url = "http://www.hearthpwn.com/decks?filter-build=26&filter-deck-tag=4&filter-deck-type-val=8&filter-deck-type-op=4&sort=-rating"
   c.http_get
   # megic nokiri html parser
   parsed = Nokogiri::HTML(c.body_str)
   # getting each cards infos via css selectas
-  deck = parsed.css("tbody .col-name span a")
+  deckname = parsed.css("tbody .col-name span a")
+  classname = parsed.css("tbody .col-class")
+  type = parsed.css("tbody .col-deck-type")
   rating = parsed.css("tbody .col-ratings")
   cost = parsed.css("tbody .col-dust-cost")
-  for i in (0..10)
-    printf "%-20.20s Upvotes:%-5i Cost:%-6.6s \n", deck[i].text.chomp, rating[i].text.to_i, cost[i].text.chomp
+  lastupdated = parsed.css("tbody .col-updated .standard-date")
+  for i in (0..deckname.size-1)
+    decks.push(Deck.new(deckname[i].text.strip,
+                        classname[i].text.strip,
+                        type[i].text.strip,
+                        rating[i].text.strip,
+                        cost[i].text.strip.to_i,
+                        lastupdated[i].text.strip,
+                        "www.hearthpwn.com" + deckname[i]['href']))
   end
+  return decks
 end
 
 def cardIsPresent(cardNames, card)
@@ -27,16 +37,16 @@ def cardIsPresent(cardNames, card)
   return false
 end
 
-def findCardsPresent()
+def findCardsPresent(path)
   # That's the file where each line's the name of cards i have    
-  mycardsfile = File.open('cardsfile/myCards.txt', 'r')
+  mycardsfile = File.open(path, 'r')
   # That's the table of all cards i have              
   mycards = []
   mycardsfile.each_line do |cardname|
-    id = Cards.instance.getIdByName(cardname.chomp)
+    id = Cards.instance.getIdByName(cardname.strip)
     if (id)
-      mycards.push(cardname.chomp)
-      #printf "%-15.15s %s \n", cardname.chomp, c.getIdByName(cardname.chomp)
+      mycards.push(cardname.strip)
+      #printf "%-15.15s %s \n", cardname.strip, c.getIdByName(cardname.strip)
     end
   end
   # Find decks without cards i dont have

@@ -27,9 +27,9 @@ class Deck
   ############################################################################
   public
   def print
-    printf "Deck : %-20.20s, %-10.10s, %-10.10s, %-8.8s, %-7.7s, %-15.15s \n",
+    printf "## %-20.20s  %-10.10s %-10.10s %-8.8s %-7.7s %-15.15s ##\n",
         @name, @classname, @type, @rating, @cost, @lastupdated
-    printf "        seen on %s \n", @url
+    puts @url
     @cards.each do |card|
       printf "%s \n", card
     end
@@ -49,6 +49,7 @@ class Deck
 
   # Function used to fill @_decks table
   def setAllCards()
+    printf "Finding cards for deck \"%s\"\n", @name
     @cards = []
     # cUrl inits
     c = Curl::Easy.new()
@@ -58,9 +59,9 @@ class Deck
     # megic nokiri html parser
     parsed = Nokogiri::HTML(c.body_str)
     # getting each cards name via css selectas
-    card = parsed.css("tbody .col-name a")
+    card = parsed.css(".t-deck-details-card-list tbody .col-name a")
     for i in 0..card.size-1
-      @cards.push(card[i].text)
+      @cards.push(card[i].text.strip)
     end
     # now our cards name are stored in a tab inside the deck
   end

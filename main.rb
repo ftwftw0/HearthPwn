@@ -5,13 +5,16 @@ Dir[File.dirname(__FILE__) + '/srcs/*.rb'].each {|file| require file }
 ##################################### MAIN #########################################
 
 
-# Gotta find card list that i dont have
-mycards = findCardsPresent()
-# Generature filtered url to get Decks i can build with my actual cards.
-filteredUrl = ""
+# Gotta find card list that i have in the entered file
+mycards = findCardsPresent('cardsfile/myCards.txt')
+
 mycards.each do |card|
   printf "%-15.15s %s \n", card['name'], card['id']
 end
 
-findBestDecks()
 
+
+bestDecks = findBestDecks()
+for i in (0..10)
+  bestDecks[i].print
+end

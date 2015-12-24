@@ -93,6 +93,7 @@ class Cards
       end
       page = page + 1 # moving to next page
     end
+    print "\n"
   end
   
 end
