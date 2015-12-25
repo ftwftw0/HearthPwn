@@ -15,7 +15,7 @@ def findBestsSuitableDecks(mycards)
   page = 1
   nextbtn = true
   while (nextbtn)
-    c.url = "http://www.hearthpwn.com/decks?filter-build=26&filter-deck-tag=4&filter-deck-type-val=8&filter-deck-type-op=4&sort=-rating&page=" + page.to_s
+    c.url = "http://www.hearthpwn.com/decks?filter-build=26&filter-deck-tag=4&filter-deck-type-val=8&filter-deck-type-op=4&page=" + page.to_s + "&sort=-rating"
     c.http_get
     # megic nokiri html parser
     parsed = Nokogiri::HTML(c.body_str)
@@ -26,6 +26,7 @@ def findBestsSuitableDecks(mycards)
     rating = parsed.css("tbody .col-ratings")
     cost = parsed.css("tbody .col-dust-cost")
     lastupdated = parsed.css("tbody .col-updated .standard-date")
+    # creating decks via infos
     for i in (0..deckname.size-1)
       deck = Deck.new(deckname[i].text.strip,
                       classname[i].text.strip,
@@ -35,7 +36,9 @@ def findBestsSuitableDecks(mycards)
                         lastupdated[i].text.strip,
                       "www.hearthpwn.com" + deckname[i]['href'])
       printf "Checking cards for \"%s\" deck. Rating %s \n", deck.name, deck.rating
-      if ((ret = missCards(deck.cards, mycards)) > 0)
+      if (deck.cards.size < 30)
+        printf "This deck is fucked. It has less than 30 cards.\n"
+      elsif ((ret = missCards(deck.cards, mycards)) > 0)
         printf "You need %i more card(s)...\n", ret
       else
         decks.push(deck)
@@ -53,8 +56,8 @@ def findBestsSuitableDecks(mycards)
           nextbtn = true
         end
       end
-      page += 1
     end
+    page += 1
   end
   return decks
 end
