@@ -38,7 +38,7 @@ def findBestsSuitableDecks(mycards)
       printf "Checking cards for \"%s\" deck. Rating %s \n", deck.name, deck.rating
       if (deck.cards.size < 30)
         printf "This deck is fucked. It has less than 30 cards.\n"
-      elsif ((ret = missCards(deck.cards, mycards)) > 0)
+      elsif ((ret = missCards(deck.cards, mycards)) > 1) # 1 is the accepting number of missing card
         printf "You need %i more card(s)...\n", ret
       else
         decks.push(deck)
