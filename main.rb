@@ -37,13 +37,16 @@ end
 # Gotta find card list that i have in the entered file
 mycards = findCardsPresent('cardsfile/myCards.txt')
 
-mycards.each do |card|
-  printf "%-15.15s %s \n", card['name'], card['id']
-end
+#match = Game.new("Hunter", mycards)
 
-#suitableDeck = findBestsSuitableDecks(mycards)
-mostNeededCards = findMostNeededCards(mycards)
+#match.start()
 
+
+suitableDeck = findBestsSuitableDecks(mycards)
+
+=begin
+mostNeededCards = findMostNeededCards(mycards, 20)
 mostNeededCards.each do |card|
   printf "You need this card : %-20.20s  - Priority %i\n", card['name'], card['times']
 end
+=end

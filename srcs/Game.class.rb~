@@ -1,0 +1,11 @@
+class Game
+
+  def initialize(classname, mycards)
+    
+    
+  end
+  
+  
+  
+  
+end
